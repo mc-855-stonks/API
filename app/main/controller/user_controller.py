@@ -1,39 +1,45 @@
 from flask import request
-from flask_restx import Resource
+from flask_restx import Resource, marshal
 
 from app.main.dto.user_dto import UserDto
-from app.main.service.user_service import get_all_users, save_new_user, get_a_user
+from app.main.helper.decorator import token_required
+from app.main.service.auth_service import Auth
+from app.main.service.user_service import save_new_user, get_user_by_id, update_user
 
 api = UserDto.api
-_user = UserDto.user
+user_fields = UserDto.user
 
 
 @api.route('/')
 class UserList(Resource):
-    @api.doc('list registered users')
-    @api.marshal_list_with(_user, envelope='data')
-    def get(self):
-        """List all registered users"""
-        return get_all_users()
-
     @api.response(201, 'User successfully created.')
     @api.doc('create a new user')
-    @api.expect(_user, validate=True)
+    @api.expect(user_fields, validate=True)
     def post(self):
         """Creates a new User """
         data = request.json
         return save_new_user(data=data)
 
+    @api.response(200, 'User successfully updated.')
+    @api.doc('update user data')
+    @api.expect(user_fields, validate=True)
+    @token_required
+    def put(self):
+        """Update user data"""
+        data = request.json
+        response, status = Auth.get_logged_in_user(request)
+        user_id = response.get('data').get('user_id')
+        data['id'] = user_id
+        return update_user(data=data)
 
-@api.route('/<string:username>')
-@api.param('username', 'The username')
-class User(Resource):
-    @api.doc('get a user')
-    @api.marshal_with(_user)
-    def get(self, username):
-        """get a user given its username"""
-        user = get_a_user(username)
-        if not user:
-            api.abort(404, "User '{}' not found.".format(username))
+    @api.doc('get user data')
+    @token_required
+    def get(self):
+        """get user data given its id"""
+        response, status = Auth.get_logged_in_user(request)
+        user_id = response.get('data').get('user_id')
+        user = get_user_by_id(user_id)
+        if isinstance(user, tuple) and user[0].get('status', None) == 'fail':
+            api.abort(404, "User '{}' not found.".format(user_id))
         else:
-            return user
+            return marshal(user, user_fields, envelope='data')

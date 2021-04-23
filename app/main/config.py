@@ -39,4 +39,4 @@ config_by_name = dict(
     prod=ProductionConfig
 )
 
-key = Config.SECRET_KEY
+SECRET_KEY = Config.SECRET_KEY

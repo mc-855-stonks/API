@@ -4,7 +4,9 @@ from flask_restx import Namespace, fields
 class UserDto:
     api = Namespace('user', description='user related operations')
     user = api.model('user', {
-        'email': fields.String(required=True, description='user email address'),
-        'username': fields.String(required=True, description='user username'),
-        'password': fields.String(required=True, description='user password'),
+        'id': fields.Integer(required=False, description='user id'),
+        'name': fields.String(required=False, description='user username'),
+        'email': fields.String(required=False, description='user email address'),
+        'password': fields.String(required=False, description='user password'),
+        'investor_profile': fields.String(required=False, description='user investment profile'),
     })
