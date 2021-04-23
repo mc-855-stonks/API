@@ -1,6 +1,5 @@
 from app.main.model.user import User
-from app.main.utils.DB_utils import save_changes
-
+from app.main import db
 
 def save_new_user(data):
     user = User.query.filter_by(username=data['username']).first()
@@ -10,7 +9,9 @@ def save_new_user(data):
             username=data['username'],
             password=data['password']
         )
-        save_changes(new_user)
+        db.session.add(new_user)
+        db.session.commit()
+        
         response_object = {
             'status': 'success',
             'message': 'Successfully registered.'

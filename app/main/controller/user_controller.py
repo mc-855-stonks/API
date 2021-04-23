@@ -2,11 +2,10 @@ from flask import request
 from flask_restx import Resource
 
 from app.main.dto.user_dto import UserDto
-from app.main.service.user_service import get_all_users, save_new_user, get_a_user
+from app.main.service.user import get_all_users, save_new_user, get_a_user
 
 api = UserDto.api
 _user = UserDto.user
-
 
 @api.route('/')
 class UserList(Resource):
