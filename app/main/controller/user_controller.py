@@ -12,7 +12,7 @@ user_fields = UserDto.user
 @api.route('/')
 class UserList(Resource):
     @api.response(201, 'User successfully created.')
-    @api.doc('create a new user')
+    @api.doc('Create a new user.')
     @api.expect(user_fields, validate=True)
     def post(self):
         """Creates a new User """
@@ -20,7 +20,7 @@ class UserList(Resource):
         return save_new_user(data=data)
 
     @api.response(200, 'User successfully updated.')
-    @api.doc('update user data')
+    @api.doc('Update user data. Token Authentication is Required.')
     @api.expect(user_fields, validate=True)
     @token_required
     def put(self):
@@ -31,7 +31,7 @@ class UserList(Resource):
         data['id'] = user_id
         return update_user(data=data)
 
-    @api.doc('get user data')
+    @api.doc('Get user data. Token Authentication is Required.')
     @token_required
     def get(self):
         """get user data given its id"""
