@@ -1,9 +1,9 @@
 from app.main import db
 from app.main.model.user import User
+
 from app.main.helper import utils
 from app.main.helper.utils import create_response
 from app.main.helper.validation_helper import valid_email
-
 
 def valid_user(data):
     if not valid_email(data['email']):

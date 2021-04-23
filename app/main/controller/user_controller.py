@@ -4,11 +4,10 @@ from flask_restx import Resource, marshal
 from app.main.dto.user_dto import UserDto
 from app.main.helper.decorator import token_required
 from app.main.service.auth_service import Auth
-from app.main.service.user_service import save_new_user, get_user_by_id, update_user
+from app.main.service.user_service import save_new_user, update_user, get_user_by_id
 
 api = UserDto.api
 user_fields = UserDto.user
-
 
 @api.route('/')
 class UserList(Resource):
