@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-
 from app.main.config import config_by_env
+
 
 db = SQLAlchemy()
 flask_bcrypt = Bcrypt()

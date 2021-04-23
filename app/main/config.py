@@ -33,3 +33,4 @@ config_by_env = dict(
 )
 
 SECRET_KEY = FlaskAppConfig.SECRET_KEY
+

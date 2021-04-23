@@ -13,6 +13,7 @@ def valid_user(data):
     except AssertionError:
         return False
 
+
 def save_new_user(data):
     user = User.query.filter_by(email=data['email']).first()
     if not user:
@@ -31,6 +32,7 @@ def save_new_user(data):
         return generate_token(new_user)
     else:
         return create_response('fail', 'User already exists. Please Log in.', 409)
+
 
 def update_user(data):
     user = User.query.get(data['id'])
