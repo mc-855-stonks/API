@@ -17,27 +17,3 @@ class StockInfo(Resource):
         """Fetches data for tickers"""
         data = request.json
         return StockInfoService.get_stock_info(data=data)
-
-    # @api.response(200, 'User successfully updated.')
-    # @api.doc('Update user data. Token Authentication is Required.')
-    # @api.expect(user_fields, validate=True)
-    # @token_required
-    # def put(self):
-    #     """Update user data"""
-    #     data = request.json
-    #     response, status = Auth.get_logged_in_user(request)
-    #     user_id = response.get('data').get('user_id')
-    #     data['id'] = user_id
-    #     return update_user(data=data)
-
-    # @api.doc('Get user data. Token Authentication is Required.')
-    # @token_required
-    # def get(self):
-    #     """get user data given its id"""
-    #     response, status = Auth.get_logged_in_user(request)
-    #     user_id = response.get('data').get('user_id')
-    #     user = get_user_by_id(user_id)
-    #     if isinstance(user, tuple) and user[0].get('status', None) == 'fail':
-    #         api.abort(404, "User '{}' not found.".format(user_id))
-    #     else:
-    #         return marshal(user, user_fields, envelope='data')
