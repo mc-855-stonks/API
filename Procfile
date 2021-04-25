@@ -1,1 +1,1 @@
-web: ./db_migrate.sh && python manage.py run
+web: python manage.py run
