@@ -40,3 +40,8 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "finance-api-qa"
           heroku_email: "matheuszanotoesteves@gmail.com"
+    - name: Sync postgresql database
+      run: |
+        python manage.py db init
+        python manage.py db migrate --message "$1"
+        python manage.py db upgrade
