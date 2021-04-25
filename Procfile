@@ -1,0 +1,1 @@
+web: ./db_migrate.sh && python manage.py run
