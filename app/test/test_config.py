@@ -14,8 +14,8 @@ class TestDevelopmentConfig(TestCase):
         return app
 
     def test_app_is_development(self):
-        self.assertTrue(app.config['SECRET_KEY'] is '')
-        self.assertTrue(app.config['DEBUG'] is True)
+        self.assertTrue(app.config['SECRET_KEY'] == '')
+        self.assertTrue(app.config['DEBUG'] == True)
         self.assertFalse(current_app is None)
         self.assertTrue(
             app.config['SQLALCHEMY_DATABASE_URI'] == 'sqlite:///' + os.path.join(BASE_DIR, 'stonks_dev.db')
