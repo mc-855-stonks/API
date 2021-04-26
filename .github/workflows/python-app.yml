@@ -40,7 +40,7 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "finance-api-qa"
           heroku_email: "matheuszanotoesteves@gmail.com"
-          healthcheck: "https://finance-api-qa.herokuapp.com/healthcheck"
+          healthcheck: "http://finance-api-qa.herokuapp.com/healthcheck/"
           delay: 120
     - name: Sync postgresql database
       run: |
