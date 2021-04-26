@@ -2,9 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from app.main.config import config_by_env
-from redis import Redis
 
-redis = Redis(host='localhost', port=6379, db=0)
 db = SQLAlchemy()
 flask_bcrypt = Bcrypt()
 

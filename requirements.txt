@@ -30,3 +30,5 @@ Werkzeug==1.0.1
 zipp==1.2.0
 yfinance==0.1.59
 redis==3.5.3
+psycopg2-binary==2.8.6
+psycopg2==2.8.6

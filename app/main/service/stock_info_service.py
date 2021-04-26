@@ -1,4 +1,4 @@
-from app.main import redis
+from app.main.helper.redis import redis
 from app.main.helper.utils import create_response
 import yfinance as yf
 import json
