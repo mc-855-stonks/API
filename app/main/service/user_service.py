@@ -29,7 +29,7 @@ def save_new_user(data):
         )
         db.session.add(new_user)
         db.session.commit()
-        return generate_token(new_user)
+        return create_response('success', 'Successfully registered.', 201)
     else:
         return create_response('fail', 'User already exists. Please Log in.', 409)
 
@@ -62,19 +62,3 @@ def get_user_by_id(user_id):
     # convert investor profile id into the correct label
     user.investor_profile = utils.get_investor_profile(user.investor_profile)
     return user
-
-
-def generate_token(user: User):
-    try:
-        # generate the auth token
-        auth_token = User.encode_auth_token(user.id)
-        response_object = {
-            'status': 'success',
-            'message': 'Successfully registered.',
-            'Authorization': auth_token.decode()
-        }
-        return response_object, 201
-    except Exception as e:
-        print(e)
-        return create_response('fail', 'Some error occurred. Please try again.', 401)
-

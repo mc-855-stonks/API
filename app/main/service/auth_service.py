@@ -2,8 +2,8 @@ from app.main import db
 
 from app.main.model.blocked_tokens import BlockedToken
 from app.main.helper.utils import create_response
+from app.main.helper.cookie_session import build_auth_session_cookie, build_logout_session_cookie
 from app.main.model.user import User
-
 
 def save_token(token: str):
     blocked_token = BlockedToken(token=token)
@@ -30,7 +30,7 @@ class Auth:
                         'message': 'Successfully logged in.',
                         'Authorization': auth_token.decode()
                     }
-                    return response_object, 200
+                    return response_object, 200, {'Set-Cookie': build_auth_session_cookie(auth_token.decode())}
             else:
                 return create_response('fail', 'email or password does not match.', 401)
 
@@ -44,7 +44,7 @@ class Auth:
             resp = User.decode_auth_token(auth_token)
             if not isinstance(resp, str):
                 # mark the token as blocked
-                return save_token(token=auth_token)
+                return save_token(token=auth_token), build_logout_session_cookie()
             else:
                 return create_response('fail', resp, 401)
         else:
