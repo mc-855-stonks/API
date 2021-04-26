@@ -43,6 +43,7 @@ jobs:
           healthcheck: "https://finance-api-qa.herokuapp.com/healthcheck"
           checkstring: "ok"
           delay: 10
+          rollbackonhealthcheckfailed: true
     - name: Sync postgresql database
       run: |
         python manage.py db init
