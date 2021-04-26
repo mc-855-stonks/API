@@ -42,6 +42,7 @@ jobs:
           heroku_email: "matheuszanotoesteves@gmail.com"
           healthcheck: "http://finance-api-qa.herokuapp.com/healthcheck/"
           delay: 120
+          rollbackonhealthcheckfailed: true
     - name: Sync postgresql database
       run: |
         python manage.py db init
