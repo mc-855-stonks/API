@@ -42,7 +42,7 @@ jobs:
           heroku_email: "matheuszanotoesteves@gmail.com"
           healthcheck: "https://finance-api-qa.herokuapp.com/healthcheck"
           checkstring: "ok"
-          delay: 10
+          delay: 120
           rollbackonhealthcheckfailed: true
     - name: Sync postgresql database
       run: |
