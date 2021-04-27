@@ -34,8 +34,6 @@ class TestAuthBlueprint(BaseTestCase):
         with self.client:
             # user registration
             user_response = register_user(self)
-            response_data = json.loads(user_response.data.decode())
-            self.assertTrue(response_data['Authorization'])
             self.assertEqual(user_response.status_code, 201)
 
             # registered user login
@@ -49,8 +47,6 @@ class TestAuthBlueprint(BaseTestCase):
         with self.client:
             # user registration
             user_response = register_user(self)
-            response_data = json.loads(user_response.data.decode())
-            self.assertTrue(response_data['Authorization'])
             self.assertEqual(user_response.status_code, 201)
 
             # registered user login

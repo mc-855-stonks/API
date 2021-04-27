@@ -44,7 +44,7 @@ class Auth:
             resp = User.decode_auth_token(auth_token)
             if not isinstance(resp, str):
                 # mark the token as blocked
-                return save_token(token=auth_token), build_logout_session_cookie()
+                return save_token(token=auth_token)[0], {'Set-Cookie': build_logout_session_cookie()}
             else:
                 return create_response('fail', resp, 401)
         else:
