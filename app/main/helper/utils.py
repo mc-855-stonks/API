@@ -38,4 +38,4 @@ def create_response(status, msg, code):
         'status': status,
         'message': msg,
     }
-    return response_object, code, {'Access-Control-Allow-Headers': 'Origin, X-Requested-With, content-type, Accept', 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, DELETE', 'Access-Control-Max-Age': 86400}
+    return response_object, code

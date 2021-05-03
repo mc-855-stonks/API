@@ -1,6 +1,5 @@
 from flask import request
 from flask_restx import Resource, marshal
-from flask_cors import cross_origin
 
 from app.main.dto.user_dto import UserDto
 from app.main.helper.decorator import token_required
@@ -12,10 +11,20 @@ user_fields = UserDto.user
 
 @api.route('/')
 class UserList(Resource):
+    @api.response(200, "Access enabled")
+    @api.doc("Options request to verify CORS request access")
+    def options(self):
+        cors_headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, DELETE',
+            'Access-Control-Max-Age': 86400
+        }
+        return "Access enabled", 200, cors_headers
+
     @api.response(201, 'User successfully created.')
     @api.doc('Create a new user.')
     @api.expect(user_fields, validate=True)
-    @cross_origin()
     def post(self):
         """Creates a new User """
         data = request.json
