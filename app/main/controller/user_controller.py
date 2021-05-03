@@ -11,17 +11,6 @@ user_fields = UserDto.user
 
 @api.route('/')
 class UserList(Resource):
-    @api.response(200, "Access enabled")
-    @api.doc("Options request to verify CORS request access")
-    def options(self):
-        cors_headers = {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, DELETE',
-            'Access-Control-Max-Age': 86400
-        }
-        return "", 204, cors_headers
-
     @api.response(201, 'User successfully created.')
     @api.doc('Create a new user.')
     @api.expect(user_fields, validate=True)
