@@ -1,5 +1,6 @@
 from flask import request
 from flask_restx import Resource, marshal
+from flask_cors import cross_origin
 
 from app.main.dto.user_dto import UserDto
 from app.main.helper.decorator import token_required
@@ -10,6 +11,7 @@ api = UserDto.api
 user_fields = UserDto.user
 
 @api.route('/')
+@cross_origin()
 class UserList(Resource):
     @api.response(201, 'User successfully created.')
     @api.doc('Create a new user.')
