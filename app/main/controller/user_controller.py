@@ -11,11 +11,11 @@ api = UserDto.api
 user_fields = UserDto.user
 
 @api.route('/')
-@cross_origin()
 class UserList(Resource):
     @api.response(201, 'User successfully created.')
     @api.doc('Create a new user.')
     @api.expect(user_fields, validate=True)
+    @cross_origin()
     def post(self):
         """Creates a new User """
         data = request.json
