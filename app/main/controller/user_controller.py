@@ -20,7 +20,7 @@ class UserList(Resource):
             'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, DELETE',
             'Access-Control-Max-Age': 86400
         }
-        return "Access enabled", 200, cors_headers
+        return "", 204, cors_headers
 
     @api.response(201, 'User successfully created.')
     @api.doc('Create a new user.')
