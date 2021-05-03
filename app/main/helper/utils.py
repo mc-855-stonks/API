@@ -38,4 +38,4 @@ def create_response(status, msg, code):
         'status': status,
         'message': msg,
     }
-    return response_object, code
+    return response_object, code, {'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'}
