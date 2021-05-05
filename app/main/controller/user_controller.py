@@ -15,6 +15,7 @@ class UserList(Resource):
     @api.response(201, 'User successfully created.')
     @api.doc('Create a new user.')
     @api.expect(user_fields, validate=True)
+    @cross_origin(allow_headers='Content-Type')
     def post(self):
         """Creates a new User """
         data = request.json
@@ -35,6 +36,7 @@ class UserList(Resource):
 
     @api.doc('Get user data. Token Authentication is Required.')
     @token_required
+    @cross_origin(allow_headers='Authorization, Content-Type')
     def get(self):
         """get user data given its id"""
         response, status = Auth.get_logged_in_user(request)

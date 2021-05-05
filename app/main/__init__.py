@@ -12,6 +12,6 @@ def create_app(env):
     app.config.from_object(config_by_env[env])
     db.init_app(app)
     flask_bcrypt.init_app(app)
-    CORS(app, allow_headers='Content-Type', expose_headers='*, Authorization')
+    CORS(app, expose_headers='*, Authorization')
 
     return app

@@ -15,6 +15,7 @@ class UserLogin(Resource):
     """
     @api.doc('user login')
     @api.expect(user_auth, validate=True)
+    @cross_origin(allow_headers='Content-Type')
     def post(self):
         # get the post data
         post_data = request.json
