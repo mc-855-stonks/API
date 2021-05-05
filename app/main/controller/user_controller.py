@@ -5,6 +5,7 @@ from app.main.dto.user_dto import UserDto
 from app.main.helper.decorator import token_required
 from app.main.service.auth_service import Auth
 from app.main.service.user_service import save_new_user, update_user, get_user_by_id
+from flask_cors import cross_origin
 
 api = UserDto.api
 user_fields = UserDto.user
@@ -23,6 +24,7 @@ class UserList(Resource):
     @api.doc('Update user data. Token Authentication is Required.')
     @api.expect(user_fields, validate=True)
     @token_required
+    @cross_origin(allow_headers='Authorization, Content-Type')
     def put(self):
         """Update user data"""
         data = request.json
