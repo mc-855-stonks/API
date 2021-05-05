@@ -3,6 +3,7 @@ from flask_restx import Resource
 
 from app.main.dto.auth_dto import AuthDto
 from app.main.service.auth_service import Auth
+from flask_cors import cross_origin
 
 api = AuthDto.api
 user_auth = AuthDto.user_auth
