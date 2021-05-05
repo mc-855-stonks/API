@@ -1,3 +1,36 @@
+import datetime
+
+
+def get_side(_id):
+    """
+        This method returns the side associated to the given id.
+
+        :param id: the side id. (0 = buy; 1 = sell)
+        :return: (str) investor profile
+    """
+    side_map = {0: 'buy',
+                     1: 'sell'}
+
+    if _id not in side_map.keys():
+        raise AssertionError('The side id does not exist.')
+    else:
+        return side_map[_id]
+
+
+def get_side_id(side):
+    """
+    This method returns the id associated to the given side.
+
+    :param side: the side. (buy = 0; sell = 1)
+    :return: (int) side id
+    """
+    side_map = {'buy': 0,
+                'sell': 1}
+
+    if side.lower() not in side_map.keys():
+        raise AssertionError('The side does not exist.')
+    else:
+        return side_map[side]
 
 
 def get_investor_profile(_id):
@@ -11,7 +44,7 @@ def get_investor_profile(_id):
                             2: 'Moderado',
                             3: 'Arrojado'}
     if _id not in investor_profile_map.keys():
-        raise AssertionError('The investor profile id does not exist.')
+        raise AssertionError('The operation id does not exist.')
     else:
         return investor_profile_map[_id]
 
@@ -32,6 +65,16 @@ def get_investor_profile_id(investor_profile):
     else:
         return investor_profile_map[investor_profile]
 
+
+def get_date(string):
+    """
+
+    :param string: string with date in format Y-m-d
+    :return: datetime
+    :raise ValueError in case of invalid date format
+    """
+
+    return datetime.datetime.strptime(string, '%Y-%m-%d')
 
 def create_response(status, msg, code):
     response_object = {
