@@ -1,3 +1,4 @@
+from babel.numbers import format_currency, format_decimal
 import datetime
 
 
@@ -82,3 +83,30 @@ def create_response(status, msg, code):
         'message': msg,
     }
     return response_object, code
+
+
+def compute_mean_price_amount(prices):
+    """
+    Given a list of prices and amount, compute the mid price and final amount.
+
+    :param prices: array of tuples (price_i, amount_i)
+    :return: mid price, final amount
+    """
+    amount = 0
+    mean_price = 0
+    for p, q in prices:
+        if q > 0:
+            mean_price = (mean_price*amount + p*q)/(amount + q)
+        amount += q
+
+    return mean_price, amount
+
+
+def format_percentage(value, locale='pt_BR'):
+    value = '{0:.2f}'.format(value)
+    value = format_decimal(value, locale=locale)
+    return '{}%'.format(value)
+
+
+def format_monetary_value(value, locale='pt_BR'):
+    return format_currency(value, currency='BRL', locale=locale)

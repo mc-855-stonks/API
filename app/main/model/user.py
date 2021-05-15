@@ -16,7 +16,8 @@ class User(db.Model):
     email = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(100), nullable=False)
     investor_profile = db.Column(db.SmallInteger, nullable=False)
-    operations = db.relationship("Operation", back_populates="user", cascade="all, delete-orphan")
+    operation = db.relationship("Operation", back_populates="user", cascade="all, delete-orphan")
+    summary = db.relationship("Summary", back_populates="user", cascade="all, delete-orphan")
 
     @property
     def password(self):

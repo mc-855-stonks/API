@@ -7,7 +7,7 @@ DB_LOCAL_TEST_URI = 'sqlite:///{}'.format(os.path.join(BASE_DIR, '{}_test.db'.fo
 
 class FlaskAppConfig:
     SECRET_KEY = os.getenv('SECRET_KEY', '')
-    REDIS_URL = os.getenv('REDIS_URL', 'redis://:mypasswd@localhost:6379')
+    REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
     DEBUG = False
 
 class DevelopmentConfig(FlaskAppConfig):

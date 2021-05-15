@@ -1,12 +1,12 @@
 from sqlalchemy import func
 
 from app.main import db
-from app.main.model.operation import Operation
-from app.main.model.user import User
-
 from app.main.helper import utils
 from app.main.helper.utils import create_response, get_side_id
 from app.main.helper.validation_helper import valid_ticker
+from app.main.model.operation import Operation
+from app.main.model.user import User
+from app.main.service import summary_service
 
 
 def is_valid_operation(data):
@@ -42,6 +42,7 @@ def save_new_operation(data):
 
         db.session.add(new_operation)
         db.session.commit()
+        summary_service.update_position(data)
         return create_response('success', 'Operation successfully registered.', 201)
 
 
@@ -51,16 +52,17 @@ def __get_total_amount(data, side, is_update):
             Operation.user_id == data['user_id'],
             Operation.ticker == data['ticker'],
             Operation.side_id == get_side_id(side),
-            Operation._date <= data['date'],
+            Operation.date <= data['date'],
             Operation.id != data['id']).scalar()
     else:
         result = db.session.query(func.sum(Operation.amount)).filter(
             Operation.user_id == data['user_id'],
             Operation.ticker == data['ticker'],
             Operation.side_id == get_side_id(side),
-            Operation._date <= data['date']).scalar()
+            Operation.date <= data['date']).scalar()
 
     return result if result else 0
+
 
 def compute_remaining_amount(data, is_update=False):
     total_buy = __get_total_amount(data, side='buy', is_update=is_update)
@@ -86,7 +88,7 @@ def update_operation(data):
         operation.price = data['price']
         operation.date = data['date']
         db.session.commit()
-
+        summary_service.update_position(data)
         return operation
     else:
         return create_response('fail', 'Operation not found.', 404)
@@ -95,9 +97,10 @@ def update_operation(data):
 def delete_operation(data):
     operation = db.session.query(Operation).filter(Operation.id == data['id']).first()
     if operation:
+        summary_service.update_position(data)
         db.session.delete(operation)
         db.session.commit()
-
+        summary_service.update_position(data)
         return create_response('success', 'Operation successfully deleted.', 204)
     else:
         return create_response('fail', 'Operation not found.', 404)
@@ -106,7 +109,7 @@ def delete_operation(data):
 def filter_operation(data):
     query = db.session.query(Operation).filter_by(user_id=data['user_id'])
     if data.get('ticker', None):
-        query = query.filter_by(ticker=data['ticker'])
+        query = query.filter_by(_ticker=data['ticker'])
     if data.get('date', None):
         query = query.filter_by(_date=data['date'])
     return query.all()
