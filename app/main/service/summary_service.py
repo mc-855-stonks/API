@@ -1,6 +1,5 @@
 from app.main import db
-from app.main.helper.utils import create_response, compute_mean_price_amount, get_side_id, format_monetary_value, \
-    format_percentage
+from app.main.helper.utils import create_response, compute_mean_price_amount, get_side_id
 from app.main.model.operation import Operation
 from app.main.model.summary import Summary
 from app.main.model.user import User
@@ -75,20 +74,20 @@ def get_wallet_summary(user_id):
 
             result_stock_info = {'ticker': summary.ticker,
                                  'company_name': company_name,
-                                 'invested_value': format_monetary_value(invested),
-                                 'current_total': format_monetary_value(curr_total),
-                                 'current_price': format_monetary_value(curr_price),
-                                 'mean_price': format_monetary_value(summary.mean_price),
-                                 'curr_return': format_monetary_value(curr_return),
-                                 'curr_return_percent': format_percentage(curr_return_percent),
+                                 'invested_value': invested,
+                                 'current_total': curr_total,
+                                 'current_price': curr_price,
+                                 'mean_price': summary.mean_price,
+                                 'curr_return': curr_return,
+                                 'curr_return_percent': curr_return_percent,
                                  'amount': summary.amount}
             stocks.append(result_stock_info)
 
         wallet_return = wallet_total - total_invested
         wallet_return_percent = 100 * (wallet_total - total_invested) / total_invested
 
-        return {"total_invested": format_monetary_value(total_invested),
-                "wallet_total": format_monetary_value(wallet_total),
-                "wallet_return": format_monetary_value(wallet_return),
-                "wallet_return_percent": format_percentage(wallet_return_percent),
+        return {"total_invested": total_invested,
+                "wallet_total": wallet_total,
+                "wallet_return": wallet_return,
+                "wallet_return_percent": wallet_return_percent,
                 "stocks": stocks}
