@@ -1,6 +1,4 @@
-from babel.numbers import format_currency, format_decimal
 import datetime
-
 
 def get_side(_id):
     """
