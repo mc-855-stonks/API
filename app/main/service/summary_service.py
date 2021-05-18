@@ -84,7 +84,9 @@ def get_wallet_summary(user_id):
             stocks.append(result_stock_info)
 
         wallet_return = wallet_total - total_invested
-        wallet_return_percent = 100 * (wallet_total - total_invested) / total_invested
+        wallet_return_percent = 0.0
+        if total_invested != 0:
+            wallet_return_percent = 100 * (wallet_total - total_invested) / total_invested
 
         return {"total_invested": total_invested,
                 "wallet_total": wallet_total,
