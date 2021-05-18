@@ -1,5 +1,4 @@
 # DB
-migrations/
 *.db
 
 # Byte-compiled / optimized / DLL files
