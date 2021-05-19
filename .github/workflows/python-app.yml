@@ -49,8 +49,6 @@ jobs:
           healthcheck: "http://stonks-api-prod.herokuapp.com/healthcheck/"
           delay: 120
           rollbackonhealthcheckfailed: true
-    # - name: Sync postgresql database
-    #   run: |
-    #     python manage.py db init
-    #     python manage.py db migrate --message "$1"
-    #     python manage.py db upgrade
+    - name: Sync postgresql database
+      run: |
+        python manage.py db upgrade
