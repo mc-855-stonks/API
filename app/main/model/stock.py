@@ -8,10 +8,10 @@ class Stock(db.Model):
     __tablename__ = 'stock'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.Unicode, nullable=False)
-    ticker = db.Column(db.Unicode, nullable=False)
-    segment = db.Column(db.Unicode, nullable=False)
-    image = db.Column(db.Unicode, nullable=False)
+    name = db.Column(db.Unicode, nullable=False, default="''")
+    ticker = db.Column(db.Unicode, nullable=False, default="''")
+    segment = db.Column(db.Unicode, nullable=False, default="''")
+    image = db.Column(db.Unicode, nullable=False, default="''")
 
     def __repr__(self):
         return '<stock({}): name: {}, ticker: {}'.format(self.id, self.name, self.ticker)
