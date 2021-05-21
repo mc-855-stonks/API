@@ -8,5 +8,6 @@ def get_available_stocks():
         'name': s.name,
         'ticker': s.ticker,
         'segment': s.segment,
-        'image': s.image
+        'image': s.image,
+        'id': s.id
     } for s in stocks]
