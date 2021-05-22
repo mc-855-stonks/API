@@ -16,6 +16,5 @@ class Wallet(Resource):
         """Get operation data"""
         response, status = Auth.get_logged_in_user(request)
         user_id = response.get('data').get('user_id')
-
         result = get_wallet_summary(user_id)
         return result

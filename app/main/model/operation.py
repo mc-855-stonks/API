@@ -14,10 +14,11 @@ class Operation(db.Model):
     side_id = db.Column(db.SmallInteger, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
-    _ticker = db.Column(db.String(10), nullable=False)
     _date = db.Column(db.Date, nullable=False, default=datetime.datetime.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship("User", back_populates='operation')
+    stock_id = db.Column(db.Integer, db.ForeignKey('stock.id'))
+    stock = db.relationship("Stock", back_populates='operation')
 
     @property
     def date(self):
@@ -35,14 +36,8 @@ class Operation(db.Model):
     def side(self, side):
         self.side_id = utils.get_side_id(side)
 
-    @property
-    def ticker(self):
-        return self._ticker.upper()
 
-    @ticker.setter
-    def ticker(self, ticker):
-        self._ticker = ticker.upper()
 
     def __repr__(self):
-        return '<operation({}): {} [{}] - price: {}, amount: {}, date: {}'.format(self.id, self.ticker, self.side,
+        return '<operation({}): {} [{}] - price: {}, amount: {}, date: {}'.format(self.id, self.stock.ticker, self.side,
                                                                                   self.price, self.amount, self.date)
