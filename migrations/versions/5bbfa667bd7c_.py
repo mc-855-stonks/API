@@ -1,8 +1,8 @@
-"""Initial migration
+"""
 
-Revision ID: d95d4a5aa624
+Revision ID: 5bbfa667bd7c
 Revises: 
-Create Date: 2021-05-17 23:31:24.502506
+Create Date: 2021-05-22 00:10:11.127656
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd95d4a5aa624'
+revision = '5bbfa667bd7c'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,6 +24,14 @@ def upgrade():
     sa.Column('blocked_on', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('token')
+    )
+    op.create_table('stock',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('name', sa.Unicode(), nullable=True),
+    sa.Column('_ticker', sa.Unicode(), nullable=True),
+    sa.Column('sector', sa.Unicode(), nullable=True),
+    sa.Column('image', sa.Unicode(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
@@ -39,9 +47,10 @@ def upgrade():
     sa.Column('side_id', sa.SmallInteger(), nullable=False),
     sa.Column('amount', sa.Integer(), nullable=False),
     sa.Column('price', sa.Float(), nullable=False),
-    sa.Column('_ticker', sa.String(length=10), nullable=False),
     sa.Column('_date', sa.Date(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('stock_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['stock_id'], ['stock.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -49,8 +58,9 @@ def upgrade():
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('amount', sa.Integer(), nullable=False),
     sa.Column('mean_price', sa.Float(), nullable=False),
-    sa.Column('_ticker', sa.String(length=10), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('stock_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['stock_id'], ['stock.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -62,5 +72,6 @@ def downgrade():
     op.drop_table('summary')
     op.drop_table('operation')
     op.drop_table('user')
+    op.drop_table('stock')
     op.drop_table('blocked_tokens')
     # ### end Alembic commands ###
