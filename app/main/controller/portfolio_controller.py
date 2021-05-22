@@ -11,12 +11,11 @@ api = PortfolioDto.api
 @api.route('/')
 class Portfolio(Resource):
     @api.doc('Get the portfolio data. Token Authentication is Required.')
-    # @token_required
+    @token_required
     def get(self):
         """Get operation data"""
-        # response, status = Auth.get_logged_in_user(request)
-        # user_id = response.get('data').get('user_id')
-        user_id = 1
+        response, status = Auth.get_logged_in_user(request)
+        user_id = response.get('data').get('user_id')
         group_by = request.args.get('groupby')
         result = get_current_portfolio(user_id, groupby=group_by)
         return result
