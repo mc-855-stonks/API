@@ -49,7 +49,7 @@ class Operation(Resource):
 
     @api.doc('Get operation data. Token Authentication is Required.')
     @api.marshal_list_with(OperationDto.get_operation, envelope='data')
-    # @token_required
+    @token_required
     def get(self):
         """Get operation data"""
         response, status = Auth.get_logged_in_user(request)

@@ -14,6 +14,7 @@ class Stock(db.Model):
     image = db.Column(db.Unicode, nullable=True)
     operation = db.relationship("Operation", back_populates='stock')
     summary = db.relationship("Summary", back_populates='stock')
+    stock_history = db.relationship("StockHistory", back_populates='stock')
 
     @property
     def ticker(self):
