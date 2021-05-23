@@ -17,7 +17,7 @@ def compute_portfolio(user_id):
             return stock_response, status
 
         portfolio_total = 0
-        stocks_aux = []
+        stocks = []
         for summary in wallet_summary:
             curr_price = stock_response[summary.stock.ticker]["previousClose"]
             if isinstance(curr_price, dict) and curr_price.get('raw', None):
@@ -29,12 +29,10 @@ def compute_portfolio(user_id):
             result_stock_info = {'ticker': summary.stock.ticker,
                                  'sector': summary.stock.sector,
                                  'current_total': curr_total}
-            stocks_aux.append(result_stock_info)
+            stocks.append(result_stock_info)
 
-        stocks = []
-        for stock in stocks_aux:
+        for stock in stocks:
             stock['proportion'] = stock['current_total']/portfolio_total
-            stocks.append(stock)
 
         return {"stocks": stocks}
 
