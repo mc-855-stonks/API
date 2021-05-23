@@ -92,6 +92,11 @@ def get_wallet_summary(user_id):
                                  'amount': summary.amount}
             stocks.append(result_stock_info)
 
+        final_stocks = []
+        for stock in stocks:
+            stock['proportion'] = stock['current_total']/wallet_total
+            final_stocks.append(stock)
+
         wallet_return = wallet_total - total_invested
         wallet_return_percent = 0.0
         if total_invested != 0:
@@ -101,4 +106,4 @@ def get_wallet_summary(user_id):
                 "wallet_total": wallet_total,
                 "wallet_return": wallet_return,
                 "wallet_return_percent": wallet_return_percent,
-                "stocks": stocks}
+                "stocks": final_stocks}

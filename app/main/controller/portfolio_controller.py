@@ -13,7 +13,8 @@ class Portfolio(Resource):
     @api.doc('Get the portfolio data. Token Authentication is Required.')
     @token_required
     def get(self):
-        """Get operation data"""
+        """Get the portfolio data. Use the parameter 'groupby=ticker' to group by ticker,
+        or 'groupby=sector' to group by sector; Token Authentication is Required."""
         response, status = Auth.get_logged_in_user(request)
         user_id = response.get('data').get('user_id')
         group_by = request.args.get('groupby')
