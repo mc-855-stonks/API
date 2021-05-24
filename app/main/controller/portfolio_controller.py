@@ -5,6 +5,7 @@ from app.main.dto.portfolio_dto import PortfolioDto
 from app.main.helper.decorator import token_required
 from app.main.service.auth_service import Auth
 from app.main.service.portfolio_service import get_current_portfolio
+from flask_cors import cross_origin
 
 api = PortfolioDto.api
 
@@ -12,6 +13,7 @@ api = PortfolioDto.api
 class Portfolio(Resource):
     @api.doc('Get the portfolio data. Token Authentication is Required.')
     @token_required
+    @cross_origin(allow_headers='Authorization, Content-Type')
     def get(self):
         """Get the portfolio data. Use the parameter 'groupby=ticker' to group by ticker,
         or 'groupby=sector' to group by sector; Token Authentication is Required."""
