@@ -70,8 +70,10 @@ def __get_total_amount(data, side, stock, is_update):
 
 
 def compute_remaining_amount(data, stock, is_update=False):
-    total_buy = __get_total_amount(data, side='buy', stock=stock, is_update=is_update)
-    total_sell = __get_total_amount(data, side='sell', stock=stock, is_update=is_update)
+    total_buy = __get_total_amount(
+        data, side='buy', stock=stock, is_update=is_update)
+    total_sell = __get_total_amount(
+        data, side='sell', stock=stock, is_update=is_update)
 
     return total_buy - total_sell
 
@@ -87,10 +89,10 @@ def update_operation(data):
             return create_response('fail', 'Invalid ticker.', 400)
 
         if get_side_id(data['side']) == get_side_id('sell'):
-            remaining = compute_remaining_amount(data, stock=stock, is_update=True)
+            remaining = compute_remaining_amount(
+                data, stock=stock, is_update=True)
             if data['amount'] > remaining:
                 return create_response('fail', 'You cannot sell more {} than you have.'.format(data['ticker']), 400)
-
 
         prev_stock = operation.stock
         operation.stock = stock
@@ -101,14 +103,16 @@ def update_operation(data):
         db.session.commit()
         summary_service.update_position(data)
         if prev_stock != stock:
-            summary_service.update_position({'user_id': data['user_id'], 'ticker': prev_stock.ticker})
+            summary_service.update_position(
+                {'user_id': data['user_id'], 'ticker': prev_stock.ticker})
         return operation
     else:
         return create_response('fail', 'Operation not found.', 404)
 
 
 def delete_operation(data):
-    operation = db.session.query(Operation).filter(Operation.id == data['id']).first()
+    operation = db.session.query(Operation).filter(
+        Operation.id == data['id']).first()
     if operation:
         summary_service.update_position(data)
         db.session.delete(operation)
@@ -122,7 +126,7 @@ def delete_operation(data):
 def filter_operation(data):
     query = db.session.query(Operation).filter_by(user_id=data['user_id'])
     if data.get('ticker', None):
-        stock = Stock.query.filter_by(_ticker=data['ticker'].upper())
+        stock = Stock.query.filter_by(_ticker=data['ticker'].upper()).first()
         if not stock:
             return create_response('fail', 'Invalid ticker.', 400)
 
