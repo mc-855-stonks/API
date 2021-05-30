@@ -3,7 +3,8 @@ from flask import Blueprint
 
 from app.main.controller import operation_controller, user_controller, \
     auth_controller, stock_info_controller, healthcheck_controller, wallet_controller, stock_controller, \
-    portfolio_controller, portfolio_performance_controller
+    portfolio_controller, portfolio_performance_controller, stock_history_controller
+
 
 blueprint = Blueprint('api', __name__)
 
@@ -22,3 +23,5 @@ api.add_namespace(portfolio_controller.api, path='/portfolio')
 api.add_namespace(portfolio_performance_controller.api, path='/performance')
 api.add_namespace(healthcheck_controller.api, path="/healthcheck")
 api.add_namespace(stock_controller.api, path="/stock")
+api.add_namespace(stock_history_controller.api, path="/stock_hist")
+
