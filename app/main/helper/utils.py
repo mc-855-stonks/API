@@ -1,3 +1,8 @@
+import json
+
+import pandas as pd
+
+
 def get_side(_id):
     """
         This method returns the side associated to the given id.
@@ -86,3 +91,12 @@ def compute_mean_price_amount(prices):
         amount += q
 
     return mean_price, amount
+
+
+def dataframe_to_json(df):
+    """
+    Converts a pandas DataFrame into json
+    :param df: pd.DataFrame
+    :return: json
+    """
+    return json.loads(df.to_json(orient='records'))

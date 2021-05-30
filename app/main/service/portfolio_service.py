@@ -32,9 +32,10 @@ def compute_portfolio(user_id):
             stocks.append(result_stock_info)
 
         for stock in stocks:
-            stock['proportion'] = stock['current_total']/portfolio_total
+            stock['proportion'] = stock['current_total'] / portfolio_total
 
         return {"stocks": stocks}
+
 
 def get_current_portfolio(user_id, groupby='ticker'):
     result = compute_portfolio(user_id)
