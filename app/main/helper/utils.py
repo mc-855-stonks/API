@@ -1,5 +1,3 @@
-import datetime
-
 def get_side(_id):
     """
         This method returns the side associated to the given id.
@@ -64,16 +62,6 @@ def get_investor_profile_id(investor_profile):
     else:
         return investor_profile_map[investor_profile]
 
-
-def get_date(string):
-    """
-
-    :param string: string with date in format Y-m-d
-    :return: datetime
-    :raise ValueError in case of invalid date format
-    """
-
-    return datetime.datetime.strptime(string, '%Y-%m-%d')
 
 def create_response(status, msg, code):
     response_object = {

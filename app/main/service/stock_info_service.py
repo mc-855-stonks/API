@@ -1,10 +1,9 @@
-import os
+import json
 
-from app.main import config_by_env
+import yfinance as yf
+
 from app.main.helper.redis import redis
 from app.main.helper.utils import create_response
-import yfinance as yf
-import json
 
 STOCKS_REDIS_PREFIX = "stock:"
 TTL_STOCKS = 60 * 10 # 10 minutes

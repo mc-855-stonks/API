@@ -1,7 +1,8 @@
 from sqlalchemy import func
 
+
 from app.main import db
-from app.main.helper import utils
+from app.main.helper import utils, date_helper
 from app.main.helper.utils import create_response, get_side_id
 from app.main.helper.validation_helper import valid_ticker
 from app.main.model.operation import Operation
@@ -13,7 +14,7 @@ from app.main.service import summary_service
 def is_valid_operation(data):
     try:
         utils.get_side_id(data['side'])
-        utils.get_date(data['date'])
+        date_helper.str_to_date(data['date'])
     except:
         return False
 
@@ -133,4 +134,10 @@ def filter_operation(data):
         query = query.filter_by(stock_id=stock.id)
     if data.get('date', None):
         query = query.filter_by(_date=data['date'])
+
+    if data.get('since', None):
+        query = query.filter(Operation._date >= data['since'])
+
     return query.all()
+
+

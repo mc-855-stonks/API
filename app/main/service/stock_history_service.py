@@ -4,9 +4,10 @@ from app.main.helper.utils import create_response
 from app.main.model.stock import Stock
 from app.main.model.stock_history import StockHistory
 from app.main import db
+from app.main.service import stock_service
 
 
-def get_historical_data(tickers, period='1y'):
+def get_remote_historical_data(tickers, period='1y'):
     tickers = [ticker.upper() + ".SA" for ticker in tickers]
     stock_data = yf.Tickers(tickers)
     result = {}
@@ -22,7 +23,7 @@ def delete_historical_data(stock):
 
 
 def update_historical_data(tickers):
-    historical_data = get_historical_data(tickers)
+    historical_data = get_remote_historical_data(tickers)
     for ticker, data in historical_data.items():
         stock = Stock.query.filter_by(_ticker=ticker.upper()).first()
         if not stock:
@@ -37,4 +38,21 @@ def update_historical_data(tickers):
                                         stock=stock))
         db.session.add_all(history)
         db.session.commit()
+
+
+def filter_historical_data(data):
+    query = db.session.query(StockHistory)
+    if data.get('tickers', None):
+        exists, valid_stock_ids = stock_service.check_tickers_exists(tickers=data['ticker'])
+        if not exists:
+            return create_response('fail', 'Invalid tickers.', 400)
+        query = query.filter(StockHistory.stock_id.in_(valid_stock_ids))
+
+    if data.get('date', None):
+        query = query.filter_by(_date=data['date'])
+
+    if data.get('since', None):
+        query = query.filter(StockHistory._date >= data['since'])
+
+    return query.all()
 
