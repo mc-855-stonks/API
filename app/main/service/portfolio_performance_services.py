@@ -105,6 +105,9 @@ def get_portfolio_monthly_returns(df_returns):
     :return: pd.DataFrame({'date':[...],   # monthly
                            'return':[..]}) # values in R$
     """
+    if df_returns is None or len(df_returns) == 0:
+        return []
+
     df_returns['date'] = pd.to_datetime(df_returns['date'])
 
     df_returns = __select_end_of_month_values(df_returns)
@@ -115,3 +118,12 @@ def get_portfolio_monthly_returns(df_returns):
     df_returns.sort_values(by=['date'], ascending=False, inplace=True)
     return utils.dataframe_to_json(df_returns)
 
+
+def compute_portfolio_performance(user_id, n_months=12):
+    """TODO: terminar de criar o método que calcula os rendimento do portfolio"""
+    df_returns = get_portfolio_daily_returns(user_id=user_id, n_months=n_months)
+    df_returns = compute_percentage_returns(df_returns)
+
+    returns = get_portfolio_monthly_returns(df_returns)
+
+    return {'returns': returns}
