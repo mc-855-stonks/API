@@ -28,4 +28,5 @@ class PortfolioPerformance(Resource):
             return create_response('fail', 'Parameter ``months´´ must be at least 1.', 400)
 
         df_returns = get_portfolio_daily_returns(user_id=user_id, n_months=months)
-        return get_portfolio_monthly_returns(df_returns)
+        returns = get_portfolio_monthly_returns(df_returns)
+        return {'returns': returns}
