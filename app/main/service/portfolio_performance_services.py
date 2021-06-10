@@ -1,5 +1,5 @@
 from collections import defaultdict
-from operator import or_
+from operator import or_, and_
 
 import pandas as pd
 
@@ -48,7 +48,9 @@ def __join_historical_data_operation(start_date, user_id):
         .join(Operation, Operation._date == StockHistory.date, isouter=True) \
         .filter(StockHistory.date >= start_date,
                 StockHistory.stock_id.in_(subquery),
-                or_(Operation.stock_id == StockHistory.stock_id, Operation.stock_id == None)).all()
+                or_(and_(Operation.stock_id == StockHistory.stock_id, Operation.user_id == user_id),
+                    Operation.stock_id == None)).all()
+
     return filtered_data
 
 
