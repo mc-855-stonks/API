@@ -44,7 +44,10 @@ class Operation(Resource):
     @token_required
     def delete(self):
         """Delete operation data"""
+        response, status = Auth.get_logged_in_user(request)
+        user_id = response.get('data').get('user_id')
         data = request.json
+        data['user_id'] = user_id
         return delete_operation(data=data)
 
     @api.doc('Get operation data. Token Authentication is Required.')
