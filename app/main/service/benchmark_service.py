@@ -36,51 +36,47 @@ class BenchmarkService:
         df = pd.read_json(url)
         df['data'] = pd.to_datetime(df['data'], dayfirst=True)
         df.rename(columns={'data': 'date', 'valor': 'value'}, inplace=True)
+        df['value'] = df['value']/100
         df.sort_values(by='date', inplace=True)
         return df
 
 
     @staticmethod
-    def __get_CDI_data(months=12):
+    def __get_CDI_data(since_date):
         """
 
-        :param months: number to compute CDI
+        :param since_date: comute data since since_date
         :return: df.DataFrame({'date':[...], # daily values
                                'value':[...]})
         """
         today = date_helper.get_today_date()
-        start = date_helper.add_months(today, -months)
 
-        return BenchmarkService.__get_BC_data('CDI', start=start, end=today)
+        return BenchmarkService.__get_BC_data('CDI', start=since_date, end=today)
 
 
     @staticmethod
-    def __get_IPCA_data(months=12):
+    def __get_IPCA_data(since_date):
         """
 
-        :param months: number to compute IPCA
+        :param since_date: comute data since since_date
         :return: df.DataFrame({'date':[...], # monthly values
                                'value':[...]})
         """
         today = date_helper.get_today_date()
-        start = date_helper.add_months(today, -months)
 
-        df_ipca = BenchmarkService.__get_BC_data('IPCA', start=start, end=today)
+        df_ipca = BenchmarkService.__get_BC_data('IPCA', start=since_date, end=today)
 
         return df_ipca
 
     @staticmethod
-    def __get_IBOVESPA_data(months=12):
+    def __get_IBOVESPA_data(since_date):
         """
 
-        :param months:
+        :param since_date: comute data since since_date
         :return: a list of StockHistory
         """
-        today = date_helper.get_today_date()
-        start = date_helper.add_months(today, -months)
-
         params = {'tickers': 'BOVA11',
-                  'since': start}
+                  'since': since_date}
         ibov = filter_historical_data(params)
         result = {'date':[], 'ibov':[]}
         for item in ibov:
@@ -90,26 +86,27 @@ class BenchmarkService:
         return pd.DataFrame(result)
 
     @staticmethod
-    def get_benchmarks(months, pct=True):
+    def get_benchmarks(since_date):
         """
 
-        :param months:
-        :param pct: if pct==True return results in %, otherwise return raw values
+        :param since_date:
         :return: df.DataFrame({'date':[...],
                                 'ibov':[...],
                                 'cdi':[...]})
         """
-        df_cdi = BenchmarkService.__get_CDI_data(months)
-        df_ibov = BenchmarkService.__get_IBOVESPA_data(months)
+        df_cdi = BenchmarkService.__get_CDI_data(since_date)
+        df_ibov = BenchmarkService.__get_IBOVESPA_data(since_date)
         df_ibov['date'] = pd.to_datetime(df_ibov['date'], dayfirst=True)
 
         df_cdi.rename(columns={'value': 'cdi'}, inplace=True)
+        df_merge = df_ibov.merge(df_cdi, on='date', how='inner')
 
-        if pct:
-            df_ibov['ibov'] = df_ibov['ibov'].pct_change().fillna(0)
-            df_cdi['cdi'] = df_cdi['cdi'].pct_change().fillna(0)
+        df_merge['ibov'] = df_merge['ibov'].pct_change().fillna(0)
+        df_merge['cdi'].loc[0] = 0
+        df_merge['ibov'] = (df_merge['ibov'] + 1).cumprod()
+        df_merge['cdi'] = (df_merge['cdi']+1).cumprod()
 
-        return df_ibov.merge(df_cdi, on='date', how='inner')
+        return df_merge
 
 
 def __group_row_by_month(df):
@@ -131,7 +128,7 @@ def __group_row_by_month(df):
     return [sorted(values, key=lambda item: item['date']) for _, values in result]
 
 
-def get_portfolio_benchmarks(user_id, n_months):
+def get_portfolio_benchmarks(user_id, n_months=12):
     """
 
     :param user_id: user id
@@ -148,10 +145,19 @@ def get_portfolio_benchmarks(user_id, n_months):
                 ...]
     """
     df_returns = get_portfolio_daily_returns(user_id, n_months)
-    df_returns['return'] = df_returns['return'].pct_change().fillna(0)
+    df_returns = df_returns[df_returns['return'] > 0]
     df_returns['date'] = pd.to_datetime(df_returns['date'], dayfirst=True)
 
-    df_benchmarks = BenchmarkService.get_benchmarks(n_months)
+    min_date = df_returns['date'].min()
+    today = date_helper.get_today_date()
+    initial_date = date_helper.add_months(today, -n_months)
+    # get max date between the min date of the portfolio and the date n_months ago
+    since_date = max(min_date, initial_date)
+
+    df_benchmarks = BenchmarkService.get_benchmarks(since_date)
     df_returns = df_returns.merge(df_benchmarks, on='date', how='inner')
+    df_returns.sort_values(by='date', inplace=True)
+    df_returns['return'] = df_returns['return'].pct_change().fillna(0)
+    df_returns['return'] = (df_returns['return'] + 1).cumprod()
 
     return __group_row_by_month(df_returns)
