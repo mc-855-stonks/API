@@ -2,7 +2,6 @@ from flask import request
 from flask_restx import Resource
 
 from app.main.dto.stock_hist_dto import StockHistDto
-from app.main.helper.utils import create_response
 from app.main.service.stock_history_service import update_historical_data
 
 api = StockHistDto.api
@@ -17,5 +16,4 @@ class StockHistory(Resource):
     def get(self):
         """Fetches data for tickers"""
         tickers = request.args.get('tickers').split(',')
-        update_historical_data(tickers)
-        return create_response('success', 'Stocks successfully registered.', 201)
+        return update_historical_data(tickers)
