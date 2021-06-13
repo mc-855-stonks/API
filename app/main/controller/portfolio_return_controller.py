@@ -2,22 +2,23 @@ from flask import request
 from flask_cors import cross_origin
 from flask_restx import Resource
 
-from app.main.dto.portfolio_benchmarks_dto import PortfolioBenchmarksDto
+from app.main.dto.portfolio_return_dto import PortfolioReturnDto
 from app.main.helper.decorator import token_required
 from app.main.helper.utils import create_response
 from app.main.service.auth_service import Auth
-from app.main.service.benchmark_service import get_portfolio_benchmarks
+from app.main.service.portfolio_return_services import get_portfolio_daily_returns, \
+    get_portfolio_monthly_returns
 
-api = PortfolioBenchmarksDto.api
+api = PortfolioReturnDto.api
 
 @api.route('/')
-class PortfolioBenchmarks(Resource):
-    @api.doc('Get the portfolio benchmarks. Token Authentication is Required.')
+class PortfolioReturn(Resource):
+    @api.doc('Get the portfolio return. Token Authentication is Required.')
     @token_required
     @cross_origin(allow_headers='Authorization, Content-Type')
     def get(self):
-        """Get the portfolio benchmarks. Use the parameter 'months' to indicate how long you
-        want to analyze the portfolio benchmarks, by default we use months=12;
+        """Get the portfolio return. Use the parameter 'months' to indicate how long you
+        want to analyze the portfolio, by default we use months=12;
         Token Authentication is Required."""
 
         response, status = Auth.get_logged_in_user(request)
@@ -26,5 +27,6 @@ class PortfolioBenchmarks(Resource):
         if months < 1:
             return create_response('fail', 'Parameter ``months´´ must be at least 1.', 400)
 
-        data = get_portfolio_benchmarks(user_id=user_id, n_months=months)
-        return {'data': data}
+        df_returns = get_portfolio_daily_returns(user_id=user_id, n_months=months)
+        returns = get_portfolio_monthly_returns(df_returns)
+        return {'returns': returns}

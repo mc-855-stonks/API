@@ -5,7 +5,7 @@ from app.main.helper import date_helper
 from app.main.helper.utils import create_response
 import pandas as pd
 
-from app.main.service.portfolio_performance_services import get_portfolio_daily_returns
+from app.main.service.portfolio_return_services import get_portfolio_daily_returns
 from app.main.service.stock_history_service import filter_historical_data
 
 
@@ -145,6 +145,9 @@ def get_portfolio_benchmarks(user_id, n_months=12):
                 ...]
     """
     df_returns = get_portfolio_daily_returns(user_id, n_months)
+    if df_returns is None:
+        return []
+
     df_returns = df_returns[df_returns['return'] > 0]
     df_returns['date'] = pd.to_datetime(df_returns['date'], dayfirst=True)
 
