@@ -103,8 +103,8 @@ class BenchmarkService:
 
         df_merge['ibov'] = df_merge['ibov'].pct_change().fillna(0)
         df_merge['cdi'].loc[0] = 0
-        df_merge['ibov'] = (df_merge['ibov'] + 1).cumprod()
-        df_merge['cdi'] = (df_merge['cdi']+1).cumprod()
+        df_merge['ibov'] = (df_merge['ibov'] + 1).cumprod() - 1
+        df_merge['cdi'] = (df_merge['cdi']+1).cumprod() - 1
 
         return df_merge
 
@@ -158,6 +158,6 @@ def get_portfolio_benchmarks(user_id, n_months=12):
     df_returns = df_returns.merge(df_benchmarks, on='date', how='inner')
     df_returns.sort_values(by='date', inplace=True)
     df_returns['return'] = df_returns['return'].pct_change().fillna(0)
-    df_returns['return'] = (df_returns['return'] + 1).cumprod()
+    df_returns['return'] = (df_returns['return'] + 1).cumprod() - 1
 
     return __group_row_by_month(df_returns)
