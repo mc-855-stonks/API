@@ -8,7 +8,7 @@ def get_available_stocks():
 
 def check_tickers_exists(tickers):
     if type(tickers) != list:
-        tickers = list(tickers)
+        tickers = [tickers]
 
     valid_stock_ids = []
     for ticker in tickers:

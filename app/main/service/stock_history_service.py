@@ -38,21 +38,22 @@ def update_historical_data(tickers):
                                         stock=stock))
         db.session.add_all(history)
         db.session.commit()
+        return create_response('success', 'Stocks successfully registered.', 201)
 
 
 def filter_historical_data(data):
     query = db.session.query(StockHistory)
     if data.get('tickers', None):
-        exists, valid_stock_ids = stock_service.check_tickers_exists(tickers=data['ticker'])
+        exists, valid_stock_ids = stock_service.check_tickers_exists(tickers=data['tickers'])
         if not exists:
             return create_response('fail', 'Invalid tickers.', 400)
         query = query.filter(StockHistory.stock_id.in_(valid_stock_ids))
 
     if data.get('date', None):
-        query = query.filter_by(_date=data['date'])
+        query = query.filter_by(date=data['date'])
 
     if data.get('since', None):
-        query = query.filter(StockHistory._date >= data['since'])
+        query = query.filter(StockHistory.date >= data['since'])
 
     return query.all()
 
