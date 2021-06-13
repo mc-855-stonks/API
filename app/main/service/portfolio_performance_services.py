@@ -7,6 +7,12 @@ from app.main.service.portfolio_return_services import get_portfolio_daily_retur
 
 def get_performance_metrics(user_id, n_months):
     df_returns = get_portfolio_daily_returns(user_id=user_id, n_months=n_months)
+    if df_returns is None:
+        return {'alpha': None,
+                'beta': None,
+                'volatility': None,
+                'sharpe': None}
+
     df_returns = df_returns[df_returns['return'] > 0]
     df_returns['date'] = pd.to_datetime(df_returns['date'], dayfirst=True)
 
