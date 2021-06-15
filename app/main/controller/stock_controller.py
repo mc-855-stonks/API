@@ -12,7 +12,7 @@ api = StockDto.api
 class StockInfo(Resource):
     @api.response(201, 'Stocks successfully retrieved')
     @api.marshal_list_with(StockDto.stock, envelope='stocks')
-    @api.doc('Fetch all available stocks in the system.')
+    @api.doc('Fetch all available stocks in  the system.')
     def get(self):
         """Fetches data for tickers"""
         return get_available_stocks()
