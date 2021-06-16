@@ -36,9 +36,9 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "finance-api-qa"
           heroku_email: "matheuszanotoesteves@gmail.com"
-          healthcheck: "http://finance-api-qa.herokuapp.com/healthcheck/"
-          delay: 120
-          rollbackonhealthcheckfailed: true
+          #healthcheck: "http://finance-api-qa.herokuapp.com/healthcheck/"
+          #delay: 120
+          #rollbackonhealthcheckfailed: true
       - name: Deploy application to Heroku Production
         if: github.ref == 'refs/heads/main'
         uses: akhileshns/heroku-deploy@v3.12.12
