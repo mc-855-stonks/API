@@ -10,10 +10,12 @@ from app.main.model.stock_history import StockHistory
 
 
 def __select_end_of_month_values(df_returns):
-    end_of_month_series = date_helper.get_commercial_end_of_month(df_returns['date'])
+    end_of_month_series = date_helper.get_commercial_end_of_month(
+        df_returns['date'])
     df_end_of_month = df_returns[df_returns['date'].isin(end_of_month_series)]
     if df_end_of_month['date'].iloc[-1] != df_returns['date'].iloc[-1]:
-        df_end_of_month = df_end_of_month.append(df_returns.iloc[-1:, :]).reset_index().drop(columns=['index'])
+        df_end_of_month = df_end_of_month.append(
+            df_returns.iloc[-1:, :]).reset_index().drop(columns=['index'])
     return df_end_of_month
 
 
@@ -42,7 +44,8 @@ def __find_first_non_zero(series):
 
 
 def __join_historical_data_operation(start_date, user_id):
-    subquery = db.session.query(Operation.stock_id).filter_by(user_id=user_id).subquery()
+    subquery = db.session.query(Operation.stock_id).filter_by(
+        user_id=user_id).subquery()
     filtered_data = db.session.query(StockHistory.date, StockHistory.stock_id, StockHistory.close,
                                      Operation.price, Operation.amount, Operation.side_id) \
         .join(Operation, Operation._date == StockHistory.date, isouter=True) \
@@ -58,7 +61,8 @@ def __sum_dataframe(df_returns1, df_returns2):
     if df_returns2 is None:
         return df_returns1
 
-    df = pd.merge(df_returns1, df_returns2, on='date', how='outer', suffixes=('_1', '_2')).fillna(0)
+    df = pd.merge(df_returns1, df_returns2, on='date',
+                  how='outer', suffixes=('_1', '_2')).fillna(0)
     df['return'] = df['return_1'] + df['return_2']
     return df.drop(columns=['return_1', 'return_2'])
 
@@ -87,7 +91,8 @@ def get_portfolio_daily_returns(user_id, n_months):
                            'return':[..]}) # values in R$
     """
     today = date_helper.get_today_date()
-    start_date = date_helper.date_to_str(date_helper.add_months(today, n_months=-n_months))
+    start_date = date_helper.date_to_str(
+        date_helper.add_months(today, n_months=-n_months))
     joined_data = __join_historical_data_operation(start_date, user_id)
     map_stock_id_to_data = __get_map_stock_id_to_data(joined_data)
 
@@ -123,9 +128,34 @@ def get_portfolio_monthly_returns(df_returns):
 
 def compute_portfolio_performance(user_id, n_months=12):
     """TODO: terminar de criar o método que calcula os rendimento do portfolio"""
-    df_returns = get_portfolio_daily_returns(user_id=user_id, n_months=n_months)
+    df_returns = get_portfolio_daily_returns(
+        user_id=user_id, n_months=n_months)
     df_returns = compute_percentage_returns(df_returns)
 
     returns = get_portfolio_monthly_returns(df_returns)
 
     return {'returns': returns}
+
+
+def get_portfolio_last_day_returns(df_returns):
+    """
+    :param df_returns: pd.DataFrame({'date':[...], # daily
+                           'return':[..]})         # values in R$
+
+    :return: pd.DataFrame({'date':[...],   # monthly
+                           'return':[..]}) # values in R$
+    """
+    if df_returns is None or len(df_returns) == 0:
+        return 0
+
+    df_returns['date'] = pd.to_datetime(df_returns['date'])
+
+    index = __find_first_non_zero(df_returns['return'])
+    df_returns = df_returns.iloc[index:, :]
+
+    df_returns['date'] = df_returns['date'].dt.strftime('%Y-%m')
+    df_returns.sort_values(by=['date'], ascending=False, inplace=True)
+    if len(df_returns) == 0:
+        return 0
+
+    return utils.dataframe_to_json(df_returns[0]['return'])
