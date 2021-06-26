@@ -33,9 +33,11 @@ class PortfolioReturn(Resource):
         returns = get_portfolio_monthly_returns(df_returns)
         return {'returns': returns}
 
+
+@api.route('/daily')
+class DailyPortfolioReturn(Resource):
     @api.doc('Get the last day portifolio return. Token Authentication is Required.')
     @token_required
-    @api.route('/daily')
     @cross_origin(allow_headers='Authorization, Content-Type')
     def get(self):
         """Get the portfolio return for the last day.
