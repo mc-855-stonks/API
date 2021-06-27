@@ -158,4 +158,4 @@ def get_portfolio_last_day_returns(df_returns):
     if len(df_returns) == 0:
         return 0
 
-    return utils.dataframe_to_json(df_returns[0]['return'])
+    return utils.dataframe_to_json(df_returns.iloc[0]['return'])
