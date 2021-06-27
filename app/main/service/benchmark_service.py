@@ -124,8 +124,8 @@ def __group_row_by_month(df):
                                                     'cdi': cdi,
                                                     'return': return_})
 
-    result = sorted(list(result.items()), key=lambda x: x[0])
-    return [sorted(values, key=lambda item: item['date']) for _, values in result]
+    result = sorted(list(result.items()), key=lambda x: x[0], reverse=True)
+    return [sorted(values, key=lambda item: item['date'], reverse=True) for _, values in result]
 
 
 def get_portfolio_benchmarks(user_id, n_months=12):
